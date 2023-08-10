@@ -13,68 +13,77 @@ import Dropdown from '../components/dropdown'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { SelectList } from 'react-native-dropdown-select-list'
 
 
-
-const SignupScreen = () => {
+const SignupScreen = ({navigation}) => {
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
     const [cpassword,setCpassword]=useState('')
     const [resStatus,setResStatus]=useState('')
     const [nationality,setNationality]=useState('')
-    const [religion,setReligion]=useState('')
-    const [dept,setDept]=useState('')
-    const [add,setAdd]=useState('')
-    const [year,setYear]=useState('')
-    const [date, setDate] = useState(new Date("1999-07-10"))
-    const [showPicker,setShowPicker]=useState(false)
-    const [dob,setDob]=useState('')
+    const [validPassword,setValidPassword]=useState(true)
 
-    const handleRegister =()=>{
-        axios.post('https://myapp1-jsxm.onrender.com/register',{
-        name:name,
-        email:email,
-        password:password,
-        residentialStatus:resStatus,
-        dob:dob,
-        dept:dept,
-        year:year,
-        religion:religion,
-        nationality:nationality,
-        address:add
-    }
-        ).then((res)=>{
-            console.log(res.message,"from the backend")
-        }).catch((err)=>{
-            console.log(err,"error occurred")
-        })
-    }
+    const [isValidEmail,setIsValidEmail]=useState(true)
 
-    const confirmIOSDate = () =>{
-        setDob(date.toDateString())
-        toggleDate()
-    }
+    const validateEmail = ()=>{
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setIsValidEmail(emailRegex.test(email));
 
-    const toggleDate =()=>{
-        setShowPicker(!showPicker)
-    }
-
-    const onChange = ({type}, selectedDate)=>{
-        if(type == "set"){
-            const currentDate = selectedDate
-            setDate(currentDate)
-
-            if(Platform.OS === "android"){
+        if(isValidEmail === false){
+            Alert.alert(
                 
-                toggleDate()
-                setDob(currentDate.toDateString())
-                
-            }
+                'Invalid Email',
+                'Please enter a valid email',
             
+                {
+                  cancelable: true,
+                },
+            )
+        }
+    }
+
+    const [selected, setSelected] = React.useState("");
+
+    const handleRes=(value)=>{
+        setResStatus(value)
+        // alert(value)
+    }
+
+    const handleNat=(value)=>{
+        setNationality(value)
+        // alert(value)
+    }
+
+
+    const data = [
+        {key:'1', value:'Hostel'},
+        {key:'2', value:'Dayscholar'},
+    ]
+
+    const data1 = [
+        {key:'1', value:'Indian'},
+        {key:'2', value:'Others'},
+    ]
+
+    
+
+    const passwordCheck=()=>{
+        if (password != cpassword){
+            setValidPassword(false);
+            Alert.alert(
+                
+                'Password Mismatch',
+                'Passwords should be the same',
+            
+                {
+                  cancelable: true,
+                },
+            )
         }
         else{
-            toggleDate()
+            setValidPassword(true)
         }
     }
 
@@ -87,11 +96,14 @@ const SignupScreen = () => {
     // >
     <KeyboardAwareScrollView>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    
     <View style={styles.inner}>
-
+    <View style={styles.topBar}>
     <View style={styles.title}>
         <Text style={styles.titleText}>Sign Up</Text>
     </View>
+    </View>
+    
     <View style={styles.inputContainer}>
         <TextInput 
         placeholder='Name'
@@ -106,6 +118,7 @@ const SignupScreen = () => {
         placeholder='Email'
         value={email}
         onChangeText={text=>setEmail(text)}
+        onEndEditing={validateEmail}
         style={styles.input}
         />
     </View>
@@ -126,144 +139,82 @@ const SignupScreen = () => {
         value={cpassword}
         onChangeText={text=>setCpassword(text)}
         style={styles.input}
+        onEndEditing={passwordCheck}
+        secureTextEntry
         />
     </View>
-
-    <View style={styles.DatePicker}>
-        {showPicker && (
-        <DateTimePicker
-            mode ="date"
-            display="spinner"
-            value={date}
-            onChange={onChange}
-        />
-        )}
-
-        {showPicker && Platform.OS==="ios" && (
-            <View
-            style={{flexDirection:"row",
-                    justifyContent:"space-around"
-                }}
-        >
-            <TouchableOpacity
-            style={[
-                styles.DatePickerbutton,
-                styles.pickerButton,
-                {backgroundColor:"#11182711"},
-            ]}
-            onPress={toggleDate}>
-                
-                <Text
-                style={[
-                    styles.DatePickerbuttonText,
-                    {color: "#075985"}
-                ]}>
-                   Cancel 
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-            style={[
-                styles.DatePickerbutton,
-                styles.pickerButton, 
-            ]}
-            onPress={confirmIOSDate}>
-                
-                <Text
-                style={[
-                    styles.DatePickerbuttonText,
-                    
-                ]}>
-                   Confirm 
-                </Text>
-            </TouchableOpacity>
-        </View>
-        )}
+    <View style={styles.selectOption}>
+    <SelectList
+        setSelected={(val) => setSelected(val)} 
+        data={data}
+        maxHeight={90}
+        save="value"
+        placeholder='Residential Status'
+        onSelect={()=>{handleRes(selected)}}
         
-        {!showPicker && (
-        <Pressable
-            onPress={toggleDate}>
-            
-        <TextInput
-            style={styles.input}
-            placeholder='10-07-1999'
-            value={dob}
-            onChangeText={setDob}
-            placeholderTextColor="#11182744"
-            editable={false}
-            onPressIn={toggleDate}
-            >
-
-        </TextInput>
-        </Pressable>)
-        }
+    />
     </View>
 
-    <View style={styles.inputContainer}>
-        <TextInput 
-        placeholder='Residential status'
-        value={resStatus}
-        onChangeText={text=>setResStatus(text)}
-        style={styles.input}
-        />
-    </View>
-
-    <View style={styles.inputContainer}>
-        <TextInput 
+    <View style={styles.selectOption}>
+    <SelectList
+        setSelected={(val) => setSelected(val)} 
+        data={data1}
+        maxHeight={90}
+        save="value"
         placeholder='Nationality'
-        value={nationality}
-        onChangeText={text=>setNationality(text)}
-        style={styles.input}
-        />
+        onSelect={()=>{handleNat(selected)}}
+    />
     </View>
-
-    <View style={styles.inputContainer}>
-        <TextInput 
-        placeholder='Religion'
-        value={religion}
-        onChangeText={text=>setReligion(text)}
-        style={styles.input}
-        />
-    </View>
-
-    <View style={styles.inputContainer}>
-        <TextInput 
-        placeholder='Department'
-        value={dept}
-        onChangeText={text=>setDept(text)}
-        style={styles.input}
-        />
-    </View>
-
-    <View style={styles.inputContainer}>
-        <TextInput 
-        placeholder='Year Ex: IV'
-        value={year}
-        placeholderTextColor="#11182744"
-        onChangeText={text=>setYear(text)}
-        style={styles.input}
-        />
-    </View>
-
-    <View style={styles.inputContainer}>
-        <TextInput 
-        placeholder='Address'
-        value={add}
-        onChangeText={text=>setAdd(text)}
-        style={styles.input}
-        />
-    </View>
-
     
+
+
     <View style={styles.buttonContainer}>
         <TouchableOpacity
-            onPress={handleRegister}
+            onPress={
+                
+                ()=>{
+
+                    if(name && isValidEmail && password  && resStatus && nationality && validPassword)
+                    {
+                    if(validPassword){
+                    navigation.navigate('Signup2',
+                    {name:name,
+                    email:email,
+                    password:password,
+                    residentialStatus:resStatus,
+                    nationality:nationality
+                    })
+                }
+                    else{
+                        Alert.alert(
+                
+                            'Password Mismatch',
+                            'Passwords should be the same',
+                        
+                            {
+                              cancelable: true,
+                            },
+                        )
+                }
+                }
+                else{
+                    Alert.alert(
+                        'Some fields are empty',
+                        'Kindly fill all the fields',
+
+                        {
+                            cancelable: true,
+                        }
+                    )
+                }
+                }
+            }
             style={[styles.button,styles.buttonOutline]}
             >
-        <Text style={styles.buttonOutlineText}>Register</Text>
+        <Text style={styles.buttonOutlineText}>Next - 1/2 </Text>
         </TouchableOpacity>
 
-        </View>
+    </View>
 
     </View>
     </TouchableWithoutFeedback>
@@ -281,7 +232,7 @@ const styles = StyleSheet.create({
     },
 
     inner: {
-        padding: 24,
+        paddingBottom: 24,
         flex: 1,
         justifyContent: 'space-around',
         alignItems:'center'
@@ -290,13 +241,19 @@ const styles = StyleSheet.create({
 inputContainer:{
     width:'80%'
 },
-
+title:{
+    marginTop:50,
+    alignItems:'center',
+    
+},
 titleText:{
-    fontSize:40,
+    marginTop:50,
+    fontSize:50,
     fontWeight:"500",
-    color:"#0782F9"
+    color:"white",
 },
 input:{
+    height:45,
     backgroundColor:'white',
     paddingHorizontal: 15,
     paddingVertical:10,
@@ -359,5 +316,22 @@ DatePickerbuttonText:{
 DatePicker:{
     width:'80%'
 },
+
+selectOption:{
+    marginTop:15,
+    width:'80%',
+    backgroundColor:"white",
+    borderRadius:10,
+
+
+},
+topBar:{
+    backgroundColor:"#0782F9",
+    height:250,
+    width:390,
+    borderBottomLeftRadius:50,
+    borderBottomRightRadius:50,
+    marginBottom:30,
+}
 
 })
