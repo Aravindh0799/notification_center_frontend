@@ -13,7 +13,7 @@ import Dropdown from '../components/dropdown'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import { SelectList } from 'react-native-dropdown-select-list'
 
 const SignupScreen2 = ({navigation,route}) => {
     
@@ -24,13 +24,20 @@ const SignupScreen2 = ({navigation,route}) => {
     const [date, setDate] = useState(new Date("1999-07-10"))
     const [showPicker,setShowPicker]=useState(false)
     const [dob,setDob]=useState('')
+    const [selected, setSelected] = React.useState("");
+
+
+    const data = [
+        {key:'1', value:'MCA'},
+        {key:'2', value:'EEE'},
+    ]
 
     const handleRegister =()=>{
         axios.post('https://myapp1-jsxm.onrender.com/register',{
         name:route.params.name,
         email:route.params.email,
         password:route.params.password,
-        resiStatus:route.params.restatus,
+        resiStatus:route.params.residentialStatus,
         dob:dob,
         dept:dept,
         year:year,
@@ -71,6 +78,10 @@ const SignupScreen2 = ({navigation,route}) => {
             toggleDate()
         }
     }
+
+    const handleDept = (value) =>{
+        setDept(value)
+    }
    
 
   return (
@@ -83,9 +94,12 @@ const SignupScreen2 = ({navigation,route}) => {
     <KeyboardAwareScrollView>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.inner}>
-
+    <View style={styles.topBar}>
     <View style={styles.title}>
-        <Text style={styles.titleText}>Sign Up</Text>
+    <Text style={styles.titleText}>Sign Up</Text>
+    </View>
+    
+        
     </View>
     
 
@@ -169,13 +183,24 @@ const SignupScreen2 = ({navigation,route}) => {
         />
     </View>
 
-    <View style={styles.inputContainer}>
+    {/* <View style={styles.inputContainer}>
         <TextInput 
         placeholder='Department'
         value={dept}
         onChangeText={text=>setDept(text)}
         style={styles.input}
         />
+    </View> */}
+
+    <View style={styles.selectOption}>
+    <SelectList
+        setSelected={(val) => setSelected(val)} 
+        data={data}
+        maxHeight={90}
+        save="value"
+        placeholder='Department'
+        onSelect={()=>{handleDept(selected)}}
+    />
     </View>
 
     <View style={styles.inputContainer}>
@@ -225,7 +250,6 @@ const styles = StyleSheet.create({
     },
 
     inner: {
-        padding: 24,
         flex: 1,
         justifyContent: 'space-around',
         alignItems:'center'
@@ -236,10 +260,10 @@ inputContainer:{
 },
 
 titleText:{
-    marginTop:50,
+    marginTop:10,
     fontSize:40,
     fontWeight:"500",
-    color:"#0782F9"
+    color:"white"
 },
 input:{
     backgroundColor:'white',
@@ -247,7 +271,8 @@ input:{
     paddingVertical:10,
     borderRadius:10,
     marginTop:15,
-    color:'black'
+    color:'black',
+    height:45,
 },
 buttonContainer:{
     width:'60%',
@@ -305,4 +330,23 @@ DatePicker:{
     width:'80%'
 },
 
+topBar:{
+    backgroundColor:"#0782F9",
+    height:250,
+    width:390,
+    borderBottomLeftRadius:50,
+    borderBottomRightRadius:50,
+    marginBottom:30,
+},
+
+title:{
+    alignItems:'center',
+    marginTop:100,
+},
+
+selectOption:{
+    width:'80%',
+    marginTop:15,
+    backgroundColor:'white'
+}
 })
