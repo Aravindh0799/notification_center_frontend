@@ -134,6 +134,7 @@ button:{
     padding: 15,
     borderRadius:10,
     alignItems:'center',
+    marginBottom:15
 },
 
 
