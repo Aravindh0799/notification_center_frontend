@@ -1,17 +1,62 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View,TouchableWithoutFeedback,Keyboard,Alert} from 'react-native'
 import React,{useState} from 'react'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import axios from 'axios'
 
-
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
 
+    const handleLogin=()=>{
+
+        if(email && password){
+            axios.post('https://myapp1-jsxm.onrender.com/login',{
+                email:email,
+                password:password
+            }).then((res)=>{
+                console.log(res.status,"from the login")
+                if(res.status===200){
+                    Alert.alert(
+                
+                        'success',
+                        'wahooo!',
+                    
+                        {
+                          cancelable: true,
+                        },
+                    )
+                    navigation.navigate('Home')
+                }
+                else{
+                    Alert.alert(
+                
+                        'User not found',
+                        'Kindly register first',
+                    
+                        {
+                          cancelable: true,
+                        },
+                    )
+                }
+            }).catch((error)=>{
+                console.log(error)
+            })
+        }
+    }
+
   return (
-    <KeyboardAvoidingView
-        style={styles.container}
-        behaviour="padding"
-    >
+
+    <KeyboardAwareScrollView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    
+    <View style={styles.inner}>
+    <View style={styles.topBar}>
+    <View style={styles.title}>
+        <Text style={styles.titleText}>Sign In</Text>
+    </View>
+    </View>
+
     <View style={styles.inputContainer}>
         <TextInput 
         placeholder='Email'
@@ -33,14 +78,14 @@ const LoginScreen = () => {
     
     <View style={styles.buttonContainer}>
         <TouchableOpacity
-            onPress={()=>{}}
+            onPress={handleLogin}
             style={styles.button}
             >
         <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
             onPress={()=>{
-
+                navigation.navigate('Signup')
             }}
             style={[styles.button,styles.buttonOutline]}
             >
@@ -48,7 +93,9 @@ const LoginScreen = () => {
         </TouchableOpacity>
 
     </View>
-    </KeyboardAvoidingView>
+    </View>
+    </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
   ) 
 }
 
@@ -63,6 +110,8 @@ const styles = StyleSheet.create({
 
 
 inputContainer:{
+    marginTop:15,
+    
     width:'80%'
 },
 input:{
@@ -71,6 +120,7 @@ input:{
     paddingVertical:10,
     borderRadius:10,
     marginTop:5,
+    height:45,
 },
 buttonContainer:{
     width:'60%',
@@ -105,4 +155,29 @@ buttonOutlineText:{
     fontWeight:'700',
     fontSize:16,
 },
+
+inner:{
+    alignItems:'center',
+
+},
+
+topBar:{
+    backgroundColor:"#0782F9",
+    height:350,
+    width:390,
+    borderBottomLeftRadius:50,
+    borderBottomRightRadius:50,
+    marginBottom:30,
+
+},
+
+title:{
+    alignItems:'center',
+    marginTop:150
+}
+,
+titleText:{
+    fontSize:50,
+    color:'white'
+}
 })
