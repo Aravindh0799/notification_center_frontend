@@ -15,7 +15,6 @@ import { Pressable} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
-
 const SignupScreen2 = ({navigation,route}) => {
     
     const [religion,setReligion]=useState('')
