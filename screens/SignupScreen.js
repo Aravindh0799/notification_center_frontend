@@ -21,7 +21,7 @@ const SignupScreen = ({navigation}) => {
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
     const [cpassword,setCpassword]=useState('')
-    const [resStatus,setResStatus]=useState('')
+    const [restatus,setResstatus]=useState('')
     const [nationality,setNationality]=useState('')
     const [validPassword,setValidPassword]=useState(true)
 
@@ -47,7 +47,7 @@ const SignupScreen = ({navigation}) => {
     const [selected, setSelected] = React.useState("");
 
     const handleRes=(value)=>{
-        setResStatus(value)
+        setResstatus(value)
         // alert(value)
     }
 
@@ -174,15 +174,15 @@ const SignupScreen = ({navigation}) => {
                 
                 ()=>{
 
-                    if(name && isValidEmail && password  && resStatus && nationality && validPassword)
+                    if(name && isValidEmail && password  && restatus && nationality && validPassword)
                     {
                     if(validPassword){
                     navigation.navigate('Signup2',
                     {name:name,
                     email:email,
                     password:password,
-                    residentialStatus:resStatus,
-                    nationality:nationality
+                    residentialStatus:restatus,
+                    nationality:nationality,
                     })
                 }
                     else{
@@ -199,8 +199,8 @@ const SignupScreen = ({navigation}) => {
                 }
                 else{
                     Alert.alert(
-                        'Some fields are empty',
-                        'Kindly fill all the fields',
+                        'Some fields are empty/Invalid',
+                        'Kindly fill all the fields with correct data',
 
                         {
                             cancelable: true,

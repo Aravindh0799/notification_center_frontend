@@ -31,7 +31,7 @@ const SignupScreen2 = ({navigation,route}) => {
         name:route.params.name,
         email:route.params.email,
         password:route.params.password,
-        residentialStatus:route.params.resStatus,
+        resiStatus:route.params.restatus,
         dob:dob,
         dept:dept,
         year:year,
@@ -72,6 +72,7 @@ const SignupScreen2 = ({navigation,route}) => {
             toggleDate()
         }
     }
+   
 
   return (
 
