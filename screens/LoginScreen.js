@@ -3,7 +3,7 @@ import React,{useState} from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios'
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({navigation,route}) => {
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
@@ -26,7 +26,7 @@ const LoginScreen = ({navigation}) => {
                           cancelable: true,
                         },
                     )
-                    navigation.navigate('Home')
+                    navigation.navigate('Home',{email:email})
                 }
                 else{
                     Alert.alert(

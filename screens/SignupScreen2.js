@@ -17,13 +17,9 @@ import { SelectList } from 'react-native-dropdown-select-list'
 
 const SignupScreen2 = ({navigation,route}) => {
     
-    const [religion,setReligion]=useState('')
+    
     const [dept,setDept]=useState('')
-    const [add,setAdd]=useState('')
     const [year,setYear]=useState('')
-    const [date, setDate] = useState(new Date("1999-07-10"))
-    const [showPicker,setShowPicker]=useState(false)
-    const [dob,setDob]=useState('')
     const [selected, setSelected] = React.useState("");
 
 

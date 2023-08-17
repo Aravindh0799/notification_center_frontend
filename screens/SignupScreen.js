@@ -21,11 +21,18 @@ const SignupScreen = ({navigation}) => {
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
     const [cpassword,setCpassword]=useState('')
-    const [restatus,setResstatus]=useState('')
-    const [nationality,setNationality]=useState('')
+    
     const [validPassword,setValidPassword]=useState(true)
 
     const [isValidEmail,setIsValidEmail]=useState(true)
+
+    const [dept,setDept]=useState('')
+
+
+    const data= [
+        {key:'1', value:'MCA'},
+        {key:'2', value:'EEE'},
+    ]
 
     const validateEmail = ()=>{
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,27 +53,10 @@ const SignupScreen = ({navigation}) => {
 
     const [selected, setSelected] = React.useState("");
 
-    const handleRes=(value)=>{
-        setResstatus(value)
-        // alert(value)
-    }
-
-    const handleNat=(value)=>{
-        setNationality(value)
-        // alert(value)
-    }
 
 
-    const data = [
-        {key:'1', value:'Hostel'},
-        {key:'2', value:'Dayscholar'},
-    ]
 
-    const data1 = [
-        {key:'1', value:'Indian'},
-        {key:'2', value:'Others'},
-    ]
-
+    
     
 
     const passwordCheck=()=>{
@@ -85,6 +75,37 @@ const SignupScreen = ({navigation}) => {
         else{
             setValidPassword(true)
         }
+    }
+
+
+    const handleRegister =()=>{
+        console.log("hi")
+        axios.post('http://172.20.10.2:8080/register',{
+        name:name,
+        email:email,
+        password:password,
+        dept:dept,
+        }
+        ).then((res)=>{
+            console.log(res.message,"from the backend")
+            Alert.alert(
+                'Registration Successful',
+                'Congrats!',
+            
+                {
+                  cancelable: true,
+                },
+            )
+            navigation.navigate("Login")
+        }).catch((err)=>{
+            console.log(err,"error occurred")
+        })
+
+        
+    }
+
+    const handleDept = (value) =>{
+        setDept(value)
     }
 
   return (
@@ -143,30 +164,19 @@ const SignupScreen = ({navigation}) => {
         secureTextEntry
         />
     </View>
+    
+
+    
     <View style={styles.selectOption}>
     <SelectList
         setSelected={(val) => setSelected(val)} 
         data={data}
         maxHeight={90}
         save="value"
-        placeholder='Residential Status'
-        onSelect={()=>{handleRes(selected)}}
-        
+        placeholder='Department'
+        onSelect={()=>{handleDept(selected)}}
     />
     </View>
-
-    <View style={styles.selectOption}>
-    <SelectList
-        setSelected={(val) => setSelected(val)} 
-        data={data1}
-        maxHeight={90}
-        save="value"
-        placeholder='Nationality'
-        onSelect={()=>{handleNat(selected)}}
-    />
-    </View>
-    
-
 
     <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -174,16 +184,11 @@ const SignupScreen = ({navigation}) => {
                 
                 ()=>{
 
-                    if(name && isValidEmail && password  && restatus && nationality && validPassword)
+                    if(name && isValidEmail && password && validPassword)
                     {
                     if(validPassword){
-                    navigation.navigate('Signup2',
-                    {name:name,
-                    email:email,
-                    password:password,
-                    residentialStatus:restatus,
-                    nationality:nationality,
-                    })
+                        handleRegister()
+                        console.log("register button")
                 }
                     else{
                         Alert.alert(
@@ -211,7 +216,7 @@ const SignupScreen = ({navigation}) => {
             }
             style={[styles.button,styles.buttonOutline]}
             >
-        <Text style={styles.buttonOutlineText}>Next - 1/2 </Text>
+        <Text style={styles.buttonOutlineText}>Register</Text>
         </TouchableOpacity>
 
     </View>
