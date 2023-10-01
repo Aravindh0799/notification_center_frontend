@@ -11,18 +11,22 @@ import SignupScreen from './screens/SignupScreen';
 import Sample from './screens/Sample';
 import SignupScreen2 from './screens/SignupScreen2';
 import DScreen from './screens/DScreen';
+import PostNew from './screens/PostNew';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   registerNNPushToken(10692, '7CUT8pcSuehhKc5ym5wZkD');
   return (
     <NavigationContainer>
     <Stack.Navigator>
+      
       <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
       <Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} />
       <Stack.Screen options={{headerShown:false}} name="Signup2" component={SignupScreen2} />
       <Stack.Screen options={{headerShown:false}} name="Sample" component={Sample} />
       <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} />
       <Stack.Screen options={{headerShown:false}} name="DScreen" component={DScreen} />
+      <Stack.Screen options={{headerShown:false}} name="NewPost" component={PostNew} />
       
       
     </Stack.Navigator>
