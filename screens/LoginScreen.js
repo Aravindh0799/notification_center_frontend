@@ -2,6 +2,9 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import React,{useState} from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios'
+import { registerIndieID } from 'native-notify';
+import instance from '../components/axios';
+
 
 const LoginScreen = ({navigation,route}) => {
 
@@ -11,7 +14,7 @@ const LoginScreen = ({navigation,route}) => {
     const handleLogin=()=>{
 
         if(email && password){
-            axios.post('https://myapp1-jsxm.onrender.com/login',{
+            instance.post('login',{
                 email:email,
                 password:password
             }).then((res)=>{
@@ -21,11 +24,16 @@ const LoginScreen = ({navigation,route}) => {
                 
                         'success',
                         'wahooo!',
-                    
+                        [
+                            {
+                              text: 'OK', // Button text
+                            },
+                          ],
                         {
                           cancelable: true,
                         },
                     )
+                    // registerIndieID(email, 10692, '7CUT8pcSuehhKc5ym5wZkD');
                     navigation.navigate('Home',{email:email})
                 }
                 else{
@@ -33,7 +41,11 @@ const LoginScreen = ({navigation,route}) => {
                 
                         'User not found',
                         'Kindly register first',
-                    
+                        [
+                            {
+                              text: 'OK', // Button text
+                            },
+                          ],
                         {
                           cancelable: true,
                         },

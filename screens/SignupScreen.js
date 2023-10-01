@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SelectList } from 'react-native-dropdown-select-list'
-
+import instance from '../components/axios';
 
 const SignupScreen = ({navigation}) => {
     const [name,setName]=useState('')
@@ -43,7 +43,11 @@ const SignupScreen = ({navigation}) => {
                 
                 'Invalid Email',
                 'Please enter a valid email',
-            
+                [
+                    {
+                      text: 'OK', // Button text
+                    },
+                  ],
                 {
                   cancelable: true,
                 },
@@ -66,7 +70,11 @@ const SignupScreen = ({navigation}) => {
                 
                 'Password Mismatch',
                 'Passwords should be the same',
-            
+                [
+                    {
+                      text: 'OK', // Button text
+                    },
+                  ],
                 {
                   cancelable: true,
                 },
@@ -80,7 +88,7 @@ const SignupScreen = ({navigation}) => {
 
     const handleRegister =()=>{
         console.log("hi")
-        axios.post('http://172.20.10.2:8080/register',{
+        instance.post('register',{
         name:name,
         email:email,
         password:password,
@@ -91,7 +99,11 @@ const SignupScreen = ({navigation}) => {
             Alert.alert(
                 'Registration Successful',
                 'Congrats!',
-            
+                [
+                    {
+                      text: 'OK', // Button text
+                    },
+                  ],
                 {
                   cancelable: true,
                 },
@@ -195,7 +207,11 @@ const SignupScreen = ({navigation}) => {
                 
                             'Password Mismatch',
                             'Passwords should be the same',
-                        
+                            [
+                                {
+                                  text: 'OK', // Button text
+                                },
+                              ],
                             {
                               cancelable: true,
                             },
@@ -206,7 +222,11 @@ const SignupScreen = ({navigation}) => {
                     Alert.alert(
                         'Some fields are empty/Invalid',
                         'Kindly fill all the fields with correct data',
-
+                        [
+                            {
+                              text: 'OK', // Button text
+                            },
+                          ],
                         {
                             cancelable: true,
                         }

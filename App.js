@@ -1,5 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import registerNNPushToken from 'native-notify';
+
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,6 +13,7 @@ import SignupScreen2 from './screens/SignupScreen2';
 import DScreen from './screens/DScreen';
 const Stack = createNativeStackNavigator();
 export default function App() {
+  registerNNPushToken(10692, '7CUT8pcSuehhKc5ym5wZkD');
   return (
     <NavigationContainer>
     <Stack.Navigator>

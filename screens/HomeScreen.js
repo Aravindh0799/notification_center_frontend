@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity,TouchableWithoutFeedback,Keybo
 import React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {departments} from '../components/Cards/'
-
+import axios from 'axios'
 
 const HomeScreen = ({navigation,route}) => {
 
@@ -15,12 +15,23 @@ const HomeScreen = ({navigation,route}) => {
         onPress={()=>{
           Alert.alert(
                 "Clicked "+element.title,
-                "that's it",
+                "that's it",[
+                  {
+                    text: 'OK', // Button text
+                  },
+                ],
         
             {
               cancelable: true,
             },
         )
+        // axios.post(`https://app.nativenotify.com/api/indie/notification`, {
+        //       subID: 'put your unique app user ID here as a string',
+        //       appId: 10692,
+        //       appToken: '7CUT8pcSuehhKc5ym5wZkD',
+        //       title: 'put your push notification title here as a string',
+        //       message: 'put your push notification message here as a string'
+        // });
 
         navigation.navigate("DScreen",{dName:element.title})
 
@@ -45,27 +56,7 @@ const HomeScreen = ({navigation,route}) => {
       <Text style={styles.topText}>Home</Text>
       </View>
 
-    {/* <View style={styles.buttonContainer}>
-      <TouchableOpacity
-            onPress={()=>{
-                navigation.navigate('')
-            }}
-            style={[styles.button,styles.buttonOutline]}
-            >
-        <Text style={styles.buttonOutlineText}>PSG TECH</Text>
-        </TouchableOpacity>
-    </View>
-
-    <View style={styles.buttonContainer1}>
-      <TouchableOpacity
-            onPress={()=>{
-                navigation.navigate('')
-            }}
-            style={[styles.button,styles.buttonOutline]}
-            >
-        <Text style={styles.buttonOutlineText}>MCA</Text>
-        </TouchableOpacity>
-    </View> */}
+   
 
     <View style={styles.cardsContainer}>
       
