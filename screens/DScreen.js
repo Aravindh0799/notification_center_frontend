@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity,TouchableWithoutFeedback,Keyboard,Alert} from 'react-native'
+import { StyleSheet, Text, View, Image,TouchableOpacity,TouchableWithoutFeedback,Keyboard,Alert} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import instance from '../components/axios';
@@ -8,6 +8,8 @@ const DScreen = ({navigation,route}) => {
 
 
   let dName;
+  const email=route.params.email
+  const dept =route.params.dept
   const [notices,setNotices] = useState("")
 
   useEffect(()=>{
@@ -24,13 +26,14 @@ const DScreen = ({navigation,route}) => {
 
   const nlist = () =>{
     if(notices && Array.isArray(notices)){
-    return notices.map(element=>{
+    return notices.reverse().map(element=>{
     return(
         
             <View key={element._id} style={styles.cards}>
             <View style={styles.details}>
             <Text style={styles.dName}>{element.title}</Text>
             <Text style={styles.desc}>{element.description}</Text>
+            <Image src={element.image}></Image>
             </View>
             <View style={styles.vdate}>
             <Text style={styles.dText}>Valid till : {element.validityDate}</Text>

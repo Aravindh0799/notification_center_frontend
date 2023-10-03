@@ -7,10 +7,7 @@ export const departments=[
             key:'2',
             title:'MCA'
         },
-        {
-            key:'3',
-            title:'EEE'
-        }
+        
 
 ]
 
