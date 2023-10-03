@@ -20,13 +20,14 @@ export default function App() {
     <NavigationContainer>
     <Stack.Navigator>
       
+      <Stack.Screen options={{headerShown:false}} name="NewPost" component={PostNew} />
       <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
       <Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} />
       <Stack.Screen options={{headerShown:false}} name="Signup2" component={SignupScreen2} />
       <Stack.Screen options={{headerShown:false}} name="Sample" component={Sample} />
       <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} />
       <Stack.Screen options={{headerShown:false}} name="DScreen" component={DScreen} />
-      <Stack.Screen options={{headerShown:false}} name="NewPost" component={PostNew} />
+      
       
       
     </Stack.Navigator>

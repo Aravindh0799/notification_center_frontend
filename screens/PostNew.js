@@ -27,6 +27,7 @@ export default function PostNew(){
   const [studentChecked, setStudentChecked] = useState(false);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
+  const [base64Image, setBase64Image] = useState(null);
 
   const [isChecked, setIsChecked] = useState({
     staff: false,
@@ -45,27 +46,27 @@ export default function PostNew(){
     })();
   }, []);
 
-  const pickImage = async () => {
-    try {const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [20,18],
-      quality: 1,
-    });
+  // const pickImage = async () => {
+  //   try {const result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [20,18],
+  //     quality: 1,
+  //   });
 
-    console.log(result);
+  //   console.log(result);
 
-    if(!result.cancelled){
-      setImage(result.assets[0].uri);
-    }
-    else{
-      console.log('Image selection cancelled');
-    }
-  }catch(error){
-    console.error("Error while picking an image", error);
-  }
+  //   if(!result.cancelled){
+  //     setImage(result.assets[0].uri);
+  //   }
+  //   else{
+  //     console.log('Image selection cancelled');
+  //   }
+  // }catch(error){
+  //   console.error("Error while picking an image", error);
+  // }
 
-  };
+  // };
 
   if(hasGalleryPermission === false){
     return <Text> No access to Internal Storage </Text>
@@ -129,14 +130,24 @@ export default function PostNew(){
         Alert.alert('Validation Error', 'Please fill all the required fields.');
         return;
       }
+      console.log('befor the axios ',{
+        title,
+      description,
+      validityDate: validityDate.toDateString(),
+      staffChecked,
+      studentChecked,
+      image
+      } )
     const response = await instance.post('newPost', { 
       title,
       description,
       validityDate: validityDate.toDateString(),
       staffChecked,
       studentChecked,
+    
       image,
     });
+    console.log('resopnse', response.data);
     if( response.data.message === 'success'){
       console.log("success");
       Alert.alert("submitted successfully");
@@ -157,18 +168,46 @@ export default function PostNew(){
   }
     catch (error){
       if(error.response){
+        Alert.alert("Image Size Too Large");
         console.error('Registration failed. Response:', error.response.data);
       }
       else if(error.request){
+        Alert.alert("Network Error occured");
         console.error('No response received. Request:', error.request);
       }
       else{
+        Alert.alert("Network Error occured");
         console.error('Error in making the request:', error.message);
       }
       
     }
   };
 
+  const pickImageAndConvertToBase64v1 = async () => {
+    // Request permission to access the device's image library
+   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+console.log(status)
+    if (status !== 'granted') {
+      console.error('Permission to access image library denied');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      base64: true, // Set this option to true to include base64 data
+    });
+   console.log(result)  
+    if (!result.canceled) {
+      const base64String = result.assets[0].base64; // Base64 representation of the selected image
+      setBase64Image(base64String);
+      setImage(base64String)
+    }
+    else{
+      setImage(null)
+    }
+    console.log('from the base function',base64Image)
+  };
   return (
     <View style={styles.first}>
     <ScrollView contentContainerStyle={styles.container}>
@@ -241,12 +280,22 @@ export default function PostNew(){
               />
 
               <View style={styles.button1}>
-              <Button title="Upload Image" onPress={() => pickImage() }/> 
+              <Button title="Upload Image" onPress={() => pickImageAndConvertToBase64v1() }/> 
               {image && <Image source ={{uri : image}} style= {{flex:1/2}} />}
               {errorImage ? <Text style ={styles.error}>{errorImage}</Text>: null}
               </View>
               <View style={styles.button2}>
               <Button title="Submit" onPress={handleSubmit} />
+
+              {base64Image && (
+        <View>
+          <Text>Base64 Image:</Text>
+          <Image
+            source={{ uri: `data:image/jpeg;base64,${image}` }}
+            style={{ width: 200, height: 200 }}
+          />
+        </View>
+      )}
               </View>
           
     
