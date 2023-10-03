@@ -10,7 +10,7 @@ const LoginScreen = ({navigation,route}) => {
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
-
+    const [dept,setDept] = useState('')
     const handleLogin=()=>{
 
         if(email && password){
@@ -19,6 +19,8 @@ const LoginScreen = ({navigation,route}) => {
                 password:password
             }).then((res)=>{
                 console.log(res.status,"from the login")
+                setDept(res.data.dept)
+                console.log(dept)
                 if(res.status===200){
                     Alert.alert(
                 
@@ -34,7 +36,7 @@ const LoginScreen = ({navigation,route}) => {
                         },
                     )
                     // registerIndieID(email, 10692, '7CUT8pcSuehhKc5ym5wZkD');
-                    navigation.navigate('Home',{email:email})
+                    navigation.navigate('Home',{email:email,dept:dept})
                 }
                 else{
                     Alert.alert(

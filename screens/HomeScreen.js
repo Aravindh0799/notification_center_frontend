@@ -3,11 +3,18 @@ import React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {departments} from '../components/Cards/'
 import axios from 'axios'
+import {useState} from 'react'
 
 const HomeScreen = ({navigation,route}) => {
 
-  const email = route.params.email
+  // const [email,setEmail] = useState('')
+  // const [dept,setDept]=useState('')
+  // setEmail(route.params.email)
+  // setDept(route.params.dept)
 
+  const email = route.params.email
+  const dept = route.params.dept
+  
   const deptList = () =>{
     return departments.map(element => {
       return (
@@ -33,7 +40,7 @@ const HomeScreen = ({navigation,route}) => {
         //       message: 'put your push notification message here as a string'
         // });
 
-        navigation.navigate("DScreen",{dName:element.title})
+        navigation.navigate("DScreen",{dept:dept,email:email,dName:element.title})
 
         }}
         >
