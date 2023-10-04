@@ -12,14 +12,15 @@ import Sample from './screens/Sample';
 import SignupScreen2 from './screens/SignupScreen2';
 import DScreen from './screens/DScreen';
 import PostNew from './screens/PostNew';
-
+// import AddPhoto from './screens/AddPhoto';
+import UploadPhoto from './screens/PhotoUpload';
 const Stack = createNativeStackNavigator();
 export default function App() {
   registerNNPushToken(10692, '7CUT8pcSuehhKc5ym5wZkD');
   return (
     <NavigationContainer>
     <Stack.Navigator>
-      
+      {/* <Stack.Screen options={{headerShown:false}} name="PhotoUpload" component={UploadPhoto} /> */}
       <Stack.Screen options={{headerShown:false}} name="NewPost" component={PostNew} />
       <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
       <Stack.Screen options={{headerShown:false}} name="Signup" component={SignupScreen} />
@@ -43,3 +44,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+//<Stack.Screen options={{headerShown:false}} name="AddPhoto" component={AddPhoto} />

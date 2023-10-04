@@ -19,6 +19,7 @@
     "expo-device": "~5.4.0",
     "expo-image-picker": "^14.5.0",
     "expo-notifications": "~0.20.1",
+    "expo-permissions": "~14.2.1",
     "expo-status-bar": "~1.6.0",
     "link": "^1.5.1",
     "native-notify": "^3.0.6",
