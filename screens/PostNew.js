@@ -17,14 +17,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import instance from '../components/axios';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-
 
 export default function PostNew(){
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [validityDate, setValidityDate] = useState(new Date());
-  const [postedDate, setPostedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [staffChecked, setStaffChecked] = useState(false);
   const [studentChecked, setStudentChecked] = useState(false);
@@ -79,16 +76,10 @@ export default function PostNew(){
     setShowDatePicker(!showDatePicker);
   }
 
-  const handleVDate=(event, selectedDate)=>{
-    setShowDatePicker(Platform.OS=='ios');
-    if(selectedDate!==undefined){
-      setValidityDate(selectedDate);
-    }
-  };
   const handleDate=(event, selectedDate)=>{
     setShowDatePicker(Platform.OS=='ios');
     if(selectedDate!==undefined){
-      setPostedDate(selectedDate);
+      setValidityDate(selectedDate);
     }
   };
   const handleStaffCheck = () =>{
@@ -105,78 +96,97 @@ export default function PostNew(){
   };
   
   const handleSubmit = async () => {
-    try {
-      if (!title) {
-        setErrorTitle('Title is required');
-      } else {
-        setErrorTitle('');
-      }
-      if (!description) {
-        setErrorDescription('Description is required');
-      } else {
-        setErrorDescription('');
-      }
-      if (!image) {
-        setErrorImage('Image is not selected');
-      } else {
-        setErrorImage('');
-      }
-      if (!studentChecked && !staffChecked) {
-        alert('Please select at least one option (Staff or Student).');
-        return;
-      }
-      if (!title || !description || !image || !(staffChecked || studentChecked)) {
+    try{
+          if(!title){
+            setErrorTitle('Title is required');
+          }
+          else{
+            setErrorTitle('');
+          }
+          if(!description){
+            setErrorDescription('Description is required');
+          }
+          else{
+            setErrorDescription('');
+          }
+          if(!image){
+            setErrorImage('Image is not selected');
+          }
+          else{
+            setErrorImage('');
+          }
+          // if(!(staffChecked || studentChecked)){
+          //   setErrorCheckbox('Select atleast one option (Staff / Student)');
+          // }
+          // else{
+          //   setErrorCheckbox('');
+          // }
+          if (!studentChecked && !staffChecked) {
+            // Display an error message or take appropriate action if neither checkbox is checked.
+            alert('Please select at least one option (Staff or Student).');
+            return;
+          }
+      if(!title || !description || !image || !(staffChecked || studentChecked)){
         Alert.alert('Validation Error', 'Please fill all the required fields.');
         return;
       }
-      
-      const response = await instance.post('newPost', {
+      console.log('befor the axios ',{
         title,
-        description,
-        validityDate: validityDate.toDateString(),
-        postedDate: postedDate.toDateString(), // Include postedDate
-        staffChecked,
-        studentChecked,
-        image,
-      });
-
-      if (response.data.message === 'success') {
-        console.log('success');
-        Alert.alert('Submitted successfully');
-        setTitle('');
-        setDescription('');
-        setValidityDate(new Date());
-        setPostedDate(new Date());
-        setStaffChecked(false);
-        setStudentChecked(false);
-        setImage('');
-        setErrorTitle('');
-        setErrorDescription('');
-        setErrorImage('');
-        setErrorCheckbox('');
-      } else {
-        console.error('Registration failed. Response:', response.data);
-      }
-    } catch (error) {
-      if (error.response) {
-        Alert.alert('Image Size Too Large');
+      description,
+      validityDate: validityDate.toDateString(),
+      staffChecked,
+      studentChecked,
+      image
+      } )
+    const response = await instance.post('newPost', { 
+      title,
+      description,
+      validityDate: validityDate.toDateString(),
+      staffChecked,
+      studentChecked,
+    
+      image,
+    });
+    console.log('resopnse', response.data);
+    if( response.data.message === 'success'){
+      console.log("success");
+      Alert.alert("submitted successfully");
+      setTitle('');
+      setDescription('');
+      setValidityDate(new Date());
+      setStaffChecked(false);
+      setStudentChecked(false);
+      setImage('');
+      setErrorTitle('');
+      setErrorDescription('');
+      setErrorImage('');
+      setErrorCheckbox('');
+    }
+    else{
+      console.error('Registration failed. Response:', response.data);
+    }
+  }
+    catch (error){
+      if(error.response){
+        Alert.alert("Image Size Too Large");
         console.error('Registration failed. Response:', error.response.data);
-      } else if (error.request) {
-        Alert.alert('Network Error occurred');
+      }
+      else if(error.request){
+        Alert.alert("Network Error occured");
         console.error('No response received. Request:', error.request);
-      } else {
-        Alert.alert('Network Error occurred');
+      }
+      else{
+        Alert.alert("Network Error occured");
         console.error('Error in making the request:', error.message);
       }
+      
     }
   };
-
-
 
   const pickImageAndConvertToBase64v1 = async () => {
     // Request permission to access the device's image library
    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    console.log(status)
+console.log(status)
     if (status !== 'granted') {
       console.error('Permission to access image library denied');
       return;
@@ -226,7 +236,7 @@ export default function PostNew(){
         </View>
 
           {/* Validity Date */}
-          <Text style={styles.label}>Posted Date:</Text>
+          <Text style={styles.label}>Validity Date:</Text>
           <TouchableOpacity onPress={toggleDatePicker}>
           <Text  style={styles.input}>
             {validityDate.toDateString()}
@@ -235,7 +245,7 @@ export default function PostNew(){
           {
             showDatePicker && (
               <DateTimePicker
-                value={postedDate}
+                value={validityDate}
                 mode="date"
                 placeholder="default"
                 onChange={handleDate}
@@ -261,22 +271,13 @@ export default function PostNew(){
               <Text>Student</Text>
             </View>
             
-            <Text style={styles.label}>Validity Date:</Text>
-            <TouchableOpacity onPress={toggleDatePicker}>
-            <Text  style={styles.input}>
-              {validityDate.toDateString()}
-            </Text>
-            </TouchableOpacity>
-            {
-            showDatePicker && (
-              <DateTimePicker
-                value={validityDate}
-                mode="date"
-                placeholder="default"
-                onChange={handleVDate}
-                />
-            )
-          }
+
+              <Text style={styles.label}>Posted Date:</Text>
+              <TextInput
+                style={styles.input}
+                value={new Date().toDateString()}
+                editable={false}
+              />
 
               <View style={styles.button1}>
               <Button title="Upload Image" onPress={() => pickImageAndConvertToBase64v1() }/> 
